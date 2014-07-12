@@ -1,0 +1,14 @@
+[Zeit]
+URL=http://premium.zeit.de
+Benutzername= 
+Passwort=
+ 
+[System]
+Zielverzeichnis = ./
+
+[EMail]
+Empfaenger = your_kindle_email@free.kindle.com
+Absender = 
+SMTP_Server = 
+SMTP_User = 
+SMTP_Passwort = 
