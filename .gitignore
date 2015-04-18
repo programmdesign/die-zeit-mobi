@@ -1,1 +1,6 @@
-*.cfg
+*.pyc
+*.mobi
+*.log
+*.sh
+settings.py
+phantomjs
