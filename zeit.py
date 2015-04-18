@@ -9,9 +9,11 @@ import requests
 import smtplib
 
 from os.path import basename
+from email import encoders
 from email.mime.application import MIMEApplication
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from email.mime.base import MIMEBase
 from email.utils import COMMASPACE, formatdate
 
 from selenium import webdriver
@@ -24,7 +26,7 @@ class Zeit:
     def __init__(self):
 
         # Initialize selenium browser
-        self.browser = webdriver.PhantomJS(settings.PHATOMJS_BINARY)
+        self.browser = webdriver.PhantomJS(settings.PHANTOMJS_BINARY)
 
 
     def login(self):
@@ -68,19 +70,17 @@ class Zeit:
 
         print "Sending file to: {0}.".format(settings.EMAIL_TO)
 
-        msg = MIMEMultipart(
-                From=settings.EMAIL_FROM,
-                To=COMMASPACE.join(settings.EMAIL_TO),
-                Date=formatdate(localtime=True),
-                Subject=settings.EMAIL_SUBJECT,
-            )
-        msg.attach(MIMEText(settings.EMAIL_TEXT))
+        msg = MIMEMultipart()
+        msg['From'] = settings.EMAIL_FROM
+        msg['To'] = COMMASPACE.join(settings.EMAIL_TO)
+        msg['Subject'] =settings.EMAIL_SUBJECT
 
         with open(file_name, "rb") as f:
-                msg.attach(MIMEApplication(
-                f.read(),
-                Content_Disposition='attachment; filename="{0}"'.format(basename(file_name))
-        ))
+            part = MIMEBase('application', "octet-stream")
+            part.set_payload(f.read())
+            encoders.encode_base64(part)
+            part.add_header('Content-Disposition', 'attachment; filename="{0}"'.format(os.path.basename(file_name)))
+            msg.attach(part)
 
         smtp = smtplib.SMTP(settings.SMTP_SERVER)
         smtp.login(settings.SMTP_USER, settings.SMTP_PASSWORD)
