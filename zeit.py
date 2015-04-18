@@ -13,7 +13,11 @@ from email.mime.application import MIMEApplication
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.utils import COMMASPACE, formatdate
+
 from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 class Zeit:
 
@@ -25,29 +29,38 @@ class Zeit:
 
     def login(self):
         try:
-            print "Login: {0}.".format(settings.URL)
-            settings.browser.get(settings.URL)
-            self.browser.find_element_by_id('login_email').send_keys(settings.USER)
-            self.browser.find_element_by_id('login_password').send_keys(settings.PASSWORD)
-            self.browser.find_element_by_xpath("//input[@type='submit']").click()
+            self.browser.get(settings.URL)
+            try:
+                element = WebDriverWait(self.browser, 10).until(
+                    EC.presence_of_element_located((By.XPATH, "//input[@type='submit']"))
+                )
+            finally:
+                self.browser.find_element_by_id('login_email').send_keys(settings.USER)
+                self.browser.find_element_by_id('login_password').send_keys(settings.PASSWORD)
+                self.browser.find_element_by_xpath("//input[@type='submit']").click()
         except Exception as e:
-            self.browser.close()
             return False
 
+        print "Logged in to: {0}.".format(settings.URL)
         return True
 
     def get_mobi(self):
 
-        mobi_link = self.browser.find_element_by_id(settings.MOBI_LINK_ID).get_attribute("href")
-        print "Downloading: {0}".format(mobi_link)
+        try:
+            element = WebDriverWait(self.browser, 10).until(
+                    EC.presence_of_element_located((By.ID, settings.MOBI_LINK_ID))
+            )
+        finally:
+            mobi_link = self.browser.find_element_by_id(settings.MOBI_LINK_ID).get_attribute("href")
+            print "Downloading: {0}".format(mobi_link)
 
-        local_filename = "die_zeit.mobi"
-        r = requests.get(mobi_link, stream=True)
-        with open(local_filename, 'wb') as f:
-            for chunk in r.iter_content(chunk_size=1024):
-                if chunk: # filter out keep-alive new chunks
-                    f.write(chunk)
-                    f.flush()
+            local_filename = "die_zeit.mobi"
+            r = requests.get(mobi_link, stream=True)
+            with open(local_filename, 'wb') as f:
+                for chunk in r.iter_content(chunk_size=1024):
+                    if chunk: # filter out keep-alive new chunks
+                        f.write(chunk)
+                        f.flush()
         return local_filename
 
 
