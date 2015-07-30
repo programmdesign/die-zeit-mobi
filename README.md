@@ -8,7 +8,9 @@ To get started follow this steps:
 
 1. Install requirements: pip install -r requirements.txt
 
-2. Add your credentials to the config file and rename the file from "setting.tpl" to "settings.py"
+2. Download PhantomJS
 
-3. Run the script: python zeit.py
+3. Add your credentials and the PhantomJS path to the settings file and rename the file from "setting.tpl" to "settings.py"
+
+4. Run the script: python zeit.py
 
