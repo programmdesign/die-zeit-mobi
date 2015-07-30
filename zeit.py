@@ -8,6 +8,7 @@ import tempfile
 import requests
 import smtplib
 
+from requests.auth import HTTPBasicAuth
 from os.path import basename
 from email import encoders
 from email.mime.application import MIMEApplication
@@ -57,7 +58,7 @@ class Zeit:
             print "Downloading: {0}".format(mobi_link)
 
             local_filename = "die_zeit.mobi"
-            r = requests.get(mobi_link, stream=True)
+            r = requests.get(mobi_link, stream=True, auth=HTTPBasicAuth(settings.USER, settings.PASSWORD))
             with open(local_filename, 'wb') as f:
                 for chunk in r.iter_content(chunk_size=1024):
                     if chunk: # filter out keep-alive new chunks
@@ -89,7 +90,7 @@ class Zeit:
 
         print 'Email successfully sent!'
 
-        if os.path.exists(file_name):
+       	if os.path.exists(file_name):
             os.remove(file_name)
             print "File {0} deleted.".format(file_name)
 
