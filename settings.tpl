@@ -3,7 +3,7 @@
 URL = u"https://meine.zeit.de/anmelden?url=https%3A//premium.zeit.de/"
 USER = u""
 PASSWORD = u""
-MOBI_LINK_ID = u"premium.downloads.mobi.134220"
+MOBI_LINK_TEXT = u"Download im Mobi-Format für Amazon Kindle"
 LOCAL_FILE_NAME = u"die_zeit.mobi"
 DOWNLOAD_DIRECTORY = u"./"
 EMAIL_TO = [

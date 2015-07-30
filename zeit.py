@@ -50,10 +50,10 @@ class Zeit:
 
         try:
             element = WebDriverWait(self.browser, 10).until(
-                    EC.presence_of_element_located((By.ID, settings.MOBI_LINK_ID))
+                    EC.presence_of_element_located((By.LINK_TEXT, settings.MOBI_LINK_TEXT))
             )
         finally:
-            mobi_link = self.browser.find_element_by_id(settings.MOBI_LINK_ID).get_attribute("href")
+            mobi_link = self.browser.find_element_by_link_text(settings.MOBI_LINK_TEXT).get_attribute("href")
             print "Downloading: {0}".format(mobi_link)
 
             local_filename = "die_zeit.mobi"
@@ -101,10 +101,10 @@ if __name__ == "__main__":
     zeit = Zeit()
 
     try:
-        zeit.login()
-        file_name = zeit.get_mobi()
-        zeit.send_mobi(file_name)
+    	zeit.login()
+    	file_name = zeit.get_mobi()
+    	zeit.send_mobi(file_name)
     except Exception as e:
-        print "Error {0}".format(e)
+    	print "Error {0}".format(e)
 
     zeit.browser.close()
